@@ -30,7 +30,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
         <Link
           to="/create-post"
-          className="flex items-center justify-center gap-2 py-2.5 mt-6 mx-6 rounded-lg bg-linear-to-r from-orange-500 to-orange-600 hover:from-orange-700 hover:to-orange-800 active:scale-95 transition text-white cursor-pointer"
+          className="flex items-center justify-center gap-2 py-2.5 mt-6 mx-6 rounded-lg bg-linear-to-r from-orange-500 to-rose-600 hover:from-orange-700 hover:to-rose-800 active:scale-95 transition text-white cursor-pointer"
         >
           <CirclePlus className="w-5 h-5" />
           Create Post
@@ -42,6 +42,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
           <UserButton />
           <div>
             <h1 className="text-sm font-medium">{user.full_name}</h1>
+
             <p className="text-xs text-gray-500">@{user.username}</p>
           </div>
         </div>
