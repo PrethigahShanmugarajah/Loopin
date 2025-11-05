@@ -7,8 +7,8 @@ import StoryViewer from "./StoryViewer";
 
 const StoriesBar = () => {
   const [stories, setStories] = useState([]);
-  const [showModal, setShowModal] = useState([]);
-  const [viewStory, setViewStory] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [viewStory, setViewStory] = useState(null);
 
   const fetchStories = async () => {
     setStories(dummyStoriesData);

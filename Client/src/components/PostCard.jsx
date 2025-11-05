@@ -56,7 +56,7 @@ const PostCard = ({ post }) => {
             src={img}
             key={index}
             className={`w-full h-48 object-cover rounded-lg ${
-              post.image_urls.length === 1 && "cols-span-2 h-auto"
+              post.image_urls.length === 1 && "col-span-2 h-auto"
             }`}
             alt=""
           />

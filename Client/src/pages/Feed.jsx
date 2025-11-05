@@ -3,6 +3,7 @@ import { assets, dummyPostsData } from "../assets/assets";
 import Loading from "../components/Loading";
 import StoriesBar from "../components/StoriesBar";
 import PostCard from "../components/PostCard";
+import RecentMessages from "../components/RecentMessages";
 
 const Feed = () => {
   const [feeds, setFeeds] = useState([]);
@@ -21,7 +22,7 @@ const Feed = () => {
     <div className="h-full overflow-y-scroll no-scrollbar py-10 xl:pr-5 flex items-start justify-center xl:gap-8">
       {/* ---------------- STORIES AND POST LIST ---------------- */}
       <div>
-        {/* -------- Stories here -------- */}
+        {/* -------- STORIES HERE -------- */}
         <StoriesBar />
         <div className="p-4 space-y-6">
           {feeds.map((post) => (
@@ -45,7 +46,8 @@ const Feed = () => {
           </p>
         </div>
 
-        <h1>Recent Messages</h1>
+        {/* -------- RECENT MESSAGES -------- */}
+        <RecentMessages />
       </div>
     </div>
   ) : (

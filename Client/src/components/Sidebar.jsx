@@ -21,10 +21,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
           onClick={() => navigate("/")}
           src={assets.Logo}
           className="w-26 ml-8 cursor-pointer mb-1 mt-1"
-          alt=""
+          alt="Website Logo"
         />
 
-        <hr className="border-gray-300 mb-" />
+        <hr className="border-gray-300 mb-8" />
 
         <MenuItems setSidebarOpen={setSidebarOpen} />
 

@@ -39,8 +39,8 @@ export const dummyUserData = {
   connections: ["user_2", "user_3"],
   posts: [],
   is_verified: true,
-  createdAt: "2025-07-09T09:26:59.231Z",
-  updatedAt: "2025-07-21T06:56:50.017Z",
+  createdAt: "2025-11-05T09:26:59.231Z",
+  updatedAt: "2025-11-05T06:56:50.017Z",
 };
 
 const dummyUser2Data = {
@@ -141,8 +141,8 @@ export const dummyPostsData = [
     ],
     post_type: "text_with_image",
     likes_count: [],
-    createdAt: "2025-07-16T05:54:31.191Z",
-    updatedAt: "2025-07-16T05:54:31.191Z",
+    createdAt: "2025-11-05T05:54:31.191Z",
+    updatedAt: "2025-11-05T05:54:31.191Z",
   },
   {
     _id: "686e6d0407845749500c24cd",
@@ -152,8 +152,8 @@ export const dummyPostsData = [
     image_urls: [],
     post_type: "text",
     likes_count: [],
-    createdAt: "2025-07-09T13:22:12.601Z",
-    updatedAt: "2025-07-09T13:22:12.601Z",
+    createdAt: "2025-11-05T13:22:12.601Z",
+    updatedAt: "2025-11-05T13:22:12.601Z",
   },
   {
     _id: "686e6b21de877d29cf02e2a7",
@@ -163,8 +163,8 @@ export const dummyPostsData = [
     image_urls: [],
     post_type: "text",
     likes_count: [],
-    createdAt: "2025-07-09T13:14:09.144Z",
-    updatedAt: "2025-07-09T13:14:09.144Z",
+    createdAt: "2025-11-05T13:14:09.144Z",
+    updatedAt: "2025-11-05T13:14:09.144Z",
   },
   {
     _id: "686e3e47ba0cf0fecba19947",
@@ -175,8 +175,8 @@ export const dummyPostsData = [
     ],
     post_type: "image",
     likes_count: ["user_2zdJbcAqiOX9jq2DIueBRQn0lMt"],
-    createdAt: "2025-07-09T10:02:47.213Z",
-    updatedAt: "2025-07-09T10:09:37.075Z",
+    createdAt: "2025-11-05T10:02:47.213Z",
+    updatedAt: "2025-11-05T10:09:37.075Z",
   },
   {
     _id: "686e39e86e0585e9e2e58dd3",
@@ -187,8 +187,8 @@ export const dummyPostsData = [
     ],
     post_type: "text_with_image",
     likes_count: [],
-    createdAt: "2025-07-09T09:44:08.626Z",
-    updatedAt: "2025-07-09T09:44:08.626Z",
+    createdAt: "2025-11-05T09:44:08.626Z",
+    updatedAt: "2025-11-05T09:44:08.626Z",
   },
   {
     _id: "686e361389841ba9f2633201",
@@ -197,8 +197,8 @@ export const dummyPostsData = [
     image_urls: [],
     post_type: "text",
     likes_count: [],
-    createdAt: "2025-07-09T09:27:47.529Z",
-    updatedAt: "2025-07-09T09:27:47.529Z",
+    createdAt: "2025-11-05T09:27:47.529Z",
+    updatedAt: "2025-11-05T09:27:47.529Z",
   },
 ];
 
@@ -211,8 +211,8 @@ export const dummyRecentMessagesData = [
     message_type: "text",
     media_url: "",
     seen: true,
-    createdAt: "2025-07-25T08:06:14.436Z",
-    updatedAt: "2025-07-25T08:47:47.768Z",
+    createdAt: "2025-11-05T08:06:14.436Z",
+    updatedAt: "2025-11-05T08:47:47.768Z",
   },
   {
     _id: "6878cc3c17a54e4d3748012f",
@@ -221,8 +221,8 @@ export const dummyRecentMessagesData = [
     text: "This is a Samsung Tablet",
     message_type: "text",
     media_url: "",
-    createdAt: "2025-07-17T10:11:08.437Z",
-    updatedAt: "2025-07-25T08:07:11.893Z",
+    createdAt: "2025-11-05T10:11:08.437Z",
+    updatedAt: "2025-11-05T08:07:11.893Z",
     seen: true,
   },
   {
@@ -232,8 +232,8 @@ export const dummyRecentMessagesData = [
     text: "how are you",
     message_type: "text",
     media_url: "",
-    createdAt: "2025-07-10T12:47:40.510Z",
-    updatedAt: "2025-07-10T12:47:40.510Z",
+    createdAt: "2025-11-05T12:47:40.510Z",
+    updatedAt: "2025-11-05T12:47:40.510Z",
     seen: false,
   },
 ];
@@ -247,8 +247,8 @@ export const dummyMessagesData = [
     message_type: "image",
     media_url:
       "https://images.pexels.com/photos/106341/pexels-photo-106341.jpeg",
-    createdAt: "2025-07-17T10:10:58.524Z",
-    updatedAt: "2025-07-25T10:43:50.346Z",
+    createdAt: "2025-11-05T10:10:58.524Z",
+    updatedAt: "2025-11-05T10:43:50.346Z",
     seen: true,
   },
   {
@@ -258,8 +258,8 @@ export const dummyMessagesData = [
     text: "This is a Samsung Tablet",
     message_type: "text",
     media_url: "",
-    createdAt: "2025-07-17T10:11:08.437Z",
-    updatedAt: "2025-07-25T10:43:50.346Z",
+    createdAt: "2025-11-05T10:11:08.437Z",
+    updatedAt: "2025-11-05T10:43:50.346Z",
     seen: true,
   },
   {
@@ -270,8 +270,8 @@ export const dummyMessagesData = [
     message_type: "text",
     media_url: "",
     seen: false,
-    createdAt: "2025-07-25T10:44:12.753Z",
-    updatedAt: "2025-07-25T10:44:12.753Z",
+    createdAt: "2025-11-05T10:44:12.753Z",
+    updatedAt: "2025-11-05T10:44:12.753Z",
   },
   {
     _id: "6878cc2817a54e4d3748010c",
@@ -280,8 +280,8 @@ export const dummyMessagesData = [
     text: "you can purchase it from amazon",
     message_type: "text",
     media_url: "",
-    createdAt: "2025-08-17T10:10:48.956Z",
-    updatedAt: "2025-08-25T10:43:50.346Z",
+    createdAt: "2025-11-05T10:10:48.956Z",
+    updatedAt: "2025-11-05T10:43:50.346Z",
     seen: true,
   },
 ];
