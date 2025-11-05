@@ -6,6 +6,6 @@
   font-family: "Poppins", sans-serif;
 }
 
-a.active hr {
-  display: block;
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
