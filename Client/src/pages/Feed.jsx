@@ -41,8 +41,8 @@ const Feed = () => {
           <p className="text-slate-600">Email marketing</p>
 
           <p className="text-slate-400">
-            Supercharge your marketing with a powerful, easy-to-use platform
-            built for results.
+            Drive engagement and boost sales with a marketing platform that
+            works for you.
           </p>
         </div>
 
