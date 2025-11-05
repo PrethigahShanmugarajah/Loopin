@@ -4,12 +4,16 @@ import toast from "react-hot-toast";
 
 const StoryModal = ({ setShowModal, fetchStories }) => {
   const bgColors = [
-    "#1ABC9C",
-    "#4F46E5",
-    "#7C3AED",
-    "#DB2777",
-    "#E11D48",
-    "#CA8A04",
+    "#F97316",
+    "#3B82F6",
+    "#8B5CF6",
+    "#10B981",
+    "#F43F5E",
+    "#FACC15",
+    "#06B6D4",
+    "#9333EA",
+    "#14B8A6",
+    "#1E293B",
   ];
 
   const [mode, setMode] = useState("text");
@@ -119,7 +123,7 @@ const StoryModal = ({ setShowModal, fetchStories }) => {
               error: (e) => <p>{e.message}</p>,
             })
           }
-          className="flex items-center justify-center gap-2 text-white py-3 mt-4 w-full rounded bg-linear-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 active:scale-95 transition cursor-pointer"
+          className="flex items-center justify-center gap-2 text-white py-3 mt-4 w-full rounded bg-linear-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 active:scale-95 transition cursor-pointer"
         >
           <Sparkle size={18} /> Create Story
         </button>

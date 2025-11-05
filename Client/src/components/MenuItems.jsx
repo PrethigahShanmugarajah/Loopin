@@ -13,7 +13,7 @@ const MenuItems = ({ sidebarOpen, setSidebarOpen }) => {
           onClick={() => setSidebarOpen(false)}
           className={({ isActive }) =>
             `px-3.5 py-2 flex items-center gap-3 rounded-xl text-black ${
-              isActive ? "bg-teal-50 text-teal-700 " : "hover:bg-gray-50 "
+              isActive ? "bg-orange-50 text-orange-700 " : "hover:bg-gray-50 "
             }`
           }
         >

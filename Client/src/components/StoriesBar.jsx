@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { dummyStoriesData } from "../assets/assets";
 import { Plus } from "lucide-react";
-// import moment from "moment";
 import { timeAgo } from "../utils/timeUtils";
 import StoryModal from "./StoryModal";
 import StoryViewer from "./StoryViewer";
@@ -25,10 +24,10 @@ const StoriesBar = () => {
         {/* ---------------- ADD STORY CARD ---------------- */}
         <div
           onClick={() => setShowModal(true)}
-          className="rounded-lg shadow-sm min-w-30 max-w-30 max-h-40 aspect-3/4 cursor-pointer hover:shadow-lg transition-all duration-200 border border-dashed border-teal-300 bg-linear-to-b from-teal-50 to-white"
+          className="rounded-lg shadow-sm min-w-30 max-w-30 max-h-40 aspect-3/4 cursor-pointer hover:shadow-lg transition-all duration-200 border border-dashed border-orange-300 bg-linear-to-b from-orange-50 to-white"
         >
           <div className="h-full flex flex-col items-center justify-center p-4">
-            <div className="size-10 bg-teal-500 rounded-full flex items-center justify-center mb-3">
+            <div className="size-10 bg-orange-500 rounded-full flex items-center justify-center mb-3">
               <Plus className="w-5 h-5 text-white" />
             </div>
 
@@ -43,7 +42,7 @@ const StoriesBar = () => {
           <div
             onClick={() => setViewStory(story)}
             key={index}
-            className={`relative rounded-lg shadow min-w-30 max-h-40 cursor-pointer hover:shadow-lg transition-all duration-200 bg-linear-to-b from-teal-500 to-teal-600 hover:from-teal-700 hover:to-teal-800 active:scale-95`}
+            className={`relative rounded-lg shadow min-w-30 max-h-40 cursor-pointer hover:shadow-lg transition-all duration-200 bg-linear-to-b from-orange-500 to-orange-600 hover:from-orange-700 hover:to-orange-800 active:scale-95`}
           >
             <img
               src={story.user.profile_picture}
@@ -54,10 +53,6 @@ const StoriesBar = () => {
             <p className="absolute top-18 left-3 text-white/60 text-sm truncate max-w-24">
               {story.content}
             </p>
-
-            {/* <p className="text-white absolute bottom-1 right-2 z-10 text-xs ">
-              {moment(story.createdAt).fromNow()}
-            </p> */}
 
             <p className="text-white absolute bottom-1 right-2 z-10 text-xs ">
               {timeAgo(story.createdAt)}

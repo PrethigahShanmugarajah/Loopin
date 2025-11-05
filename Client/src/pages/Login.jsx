@@ -37,12 +37,12 @@ const Login = () => {
             </div>
           </div>
 
-          <h1 className="text-3xl md:text-6xl md:pb-2 font-bold bg-linear-to-r from-teal-950 to-teal-800 bg-clip-text text-transparent">
+          <h1 className="text-3xl md:text-6xl md:pb-2 font-bold bg-linear-to-r from-orange-950 to-orange-800 bg-clip-text text-transparent">
             {" "}
             Where friendships grow into real connections
           </h1>
 
-          <p className="text-xl md:text-3xl text-teal-900 max-w-72 md:max-w-md">
+          <p className="text-xl md:text-3xl text-orange-900 max-w-72 md:max-w-md">
             Join a global network of creators
           </p>
         </div>
