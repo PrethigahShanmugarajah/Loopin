@@ -280,7 +280,7 @@ export const dummyMessagesData = [
     text: "you can purchase it from amazon",
     message_type: "text",
     media_url: "",
-    createdAt: "2025-11-05T10:10:48.956Z",
+    createdAt: "2025-11-05T10:45:48.956Z",
     updatedAt: "2025-11-05T10:43:50.346Z",
     seen: true,
   },
