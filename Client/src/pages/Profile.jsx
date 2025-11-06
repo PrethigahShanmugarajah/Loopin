@@ -5,6 +5,7 @@ import Loading from "../components/Loading";
 import UserProfileinfo from "../components/UserProfileinfo";
 import PostCard from "../components/PostCard";
 import { timeAgo } from "../utils/timeUtils";
+import ProfileModal from "../components/ProfileModal";
 
 const Profile = () => {
   const { profileId } = useParams();
@@ -28,7 +29,6 @@ const Profile = () => {
         {/* ---------------- PROFILE CARD ---------------- */}
         <div className="bg-white rounded-2xl shadow overflow-hidden">
           {/* ---------------- COVER PHOTO ---------------- */}
-          {/* <div className="h-40 md:h-56 bg-linear-to-r from-indigo-200 via-purple-200 to-pink-200"> */}
           <div className="h-40 md:h-56 bg-linear-to-r from-orange-200 via-rose-200 to-pink-200">
             {user.cover_photo && (
               <img
@@ -109,7 +109,7 @@ const Profile = () => {
 
       {/* ---------------- EDIT PROFILE MODAL ---------------- */}
 
-      {showEdit && <p>Show Profile Edit</p>}
+      {showEdit && <ProfileModal setShowEdit={setShowEdit} />}
     </div>
   ) : (
     <Loading />
