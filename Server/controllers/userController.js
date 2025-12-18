@@ -123,19 +123,56 @@ export const discoverUsers = async (req, res) => {
 
     const filteredUsers = allUsers.filter((user) => user._id !== userId);
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Users fetched successfully!",
-        users: filteredUsers,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Users fetched successfully!",
+      users: filteredUsers,
+    });
   } catch (error) {
     console.error("Find Users Error:", error);
 
     return res.status(500).json({
       success: false,
       message: `Find Users Error: ${error.code || error.message}`,
+    });
+  }
+};
+
+/* -------- Follow User -------- */
+export const followUser = async (req, res) => {
+  try {
+    const { userId } = req.auth();
+    const { id } = req.body;
+
+    const user = await User.findById(userId);
+
+    if (user.following.includes(id)) {
+      return res.status(200).json({
+        success: true,
+        message: "You are already following this user",
+      });
+    }
+
+    user.following.push(id);
+    await user.save();
+
+    const toUser = await User.findById(id);
+    toUser.followers.push(userId);
+    await toUser.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Now you are following this user",
+      followedUser: {
+        username: toUser.username,
+      },
+    });
+  } catch (error) {
+    console.error("Follow User Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: `Follow User Error: ${error.code || error.message}`,
     });
   }
 };
