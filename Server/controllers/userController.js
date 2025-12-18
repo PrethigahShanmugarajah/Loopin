@@ -269,3 +269,39 @@ export const sendConnectionRequest = async (req, res) => {
     });
   }
 };
+
+/* -------- Get User Connection -------- */
+export const getUserConnections = async (req, res) => {
+  try {
+    const { userId } = req.auth();
+    const user = await User.findById(userId).populate(
+      "connections followers following"
+    );
+
+    const connections = user.connections;
+    const followers = user.followers;
+    const following = user.following;
+
+    const pendingConnections = (
+      await Connection.find({ to_user_id: userId, status: "pending" }).populate(
+        "from_user_id"
+      )
+    ).map((connection) => connection.from_user_id);
+
+    res.status(200).json({
+      success: true,
+      message: "User connections fetched successfully!",
+      connections,
+      followers,
+      following,
+      pendingConnections,
+    });
+  } catch (error) {
+    console.error("Get User Connection Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: `Get User Connection Error: ${error.code || error.message}`,
+    });
+  }
+};
