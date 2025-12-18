@@ -3,6 +3,7 @@ import express from "express";
 import { protect } from "../middlewares/auth.js";
 import {
   discoverUsers,
+  followUser,
   getUserData,
   updateUserData,
 } from "../controllers/userController.js";
@@ -20,6 +21,7 @@ userRouter.post(
   protect,
   updateUserData
 );
-userRouter.get("/discover", protect, discoverUsers);
+userRouter.post("/discover", protect, discoverUsers);
+userRouter.get("/follow", protect, followUser);
 
 export default userRouter;
