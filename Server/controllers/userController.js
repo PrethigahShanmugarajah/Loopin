@@ -162,7 +162,7 @@ export const followUser = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Now you are following this user",
+      message: "Now you are following this user!",
       followedUser: {
         username: toUser.username,
       },
@@ -173,6 +173,38 @@ export const followUser = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: `Follow User Error: ${error.code || error.message}`,
+    });
+  }
+};
+
+/* -------- Unfollow User -------- */
+export const unfollowUser = async (req, res) => {
+  try {
+    const { userId } = req.auth();
+    const { id } = req.body;
+
+    const user = await User.findById(userId);
+    user.following = user.following.filter((user) => user !== id);
+    await user.save();
+
+    const toUser = await User.findById(id);
+    toUser.followers = toUser.followers.filter((user) => user !== userId);
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "You have unfollowed this user successfully!",
+      unfollowedUser: {
+        username: toUser.username,
+      },
+    });
+  } catch (error) {
+    console.error("Unfollow User Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: `Unfollow User Error: ${error.code || error.message}`,
     });
   }
 };
