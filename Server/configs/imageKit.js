@@ -1,10 +1,10 @@
 // Server / configs / imageKit.js
-import ImageKit from "@imagekit/nodejs";
+import ImageKit from "imagekit";
 
-const imageKit = new ImageKit({
+const imagekit = new ImageKit({
+  publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
   privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
-  privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
-  urlEndPoint: process.env.IMAGEKIT_URL_ENDPOINT,
+  urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT,
 });
 
-export default imageKit;
+export default imagekit;
