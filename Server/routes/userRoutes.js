@@ -4,6 +4,7 @@ import { protect } from "../middlewares/auth.js";
 import {
   discoverUsers,
   followUser,
+  getUserConnections,
   getUserData,
   sendConnectionRequest,
   unfollowUser,
@@ -27,5 +28,6 @@ userRouter.post("/discover", protect, discoverUsers);
 userRouter.post("/follow", protect, followUser);
 userRouter.post("/unfollow", protect, unfollowUser);
 userRouter.post("/connect", protect, sendConnectionRequest);
+userRouter.get("/connections", protect, getUserConnections);
 
 export default userRouter;
