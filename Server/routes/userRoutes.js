@@ -1,7 +1,11 @@
 // Server / routes / userRoutes.js
 import express from "express";
 import { protect } from "../middlewares/auth.js";
-import { getUserData, updateUserData } from "../controllers/userController.js";
+import {
+  discoverUsers,
+  getUserData,
+  updateUserData,
+} from "../controllers/userController.js";
 import { upload } from "../configs/multer.js";
 
 const userRouter = express.Router();
@@ -16,5 +20,6 @@ userRouter.post(
   protect,
   updateUserData
 );
+userRouter.get("/discover", protect, discoverUsers);
 
 export default userRouter;
