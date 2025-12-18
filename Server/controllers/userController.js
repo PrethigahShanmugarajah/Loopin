@@ -105,3 +105,37 @@ export const updateUserData = async (req, res) => {
     });
   }
 };
+
+/* -------- Find Users using username, email, location, name -------- */
+export const discoverUsers = async (req, res) => {
+  try {
+    const { userId } = req.auth();
+    const { input } = req.body;
+
+    const allUsers = await User.find({
+      $or: [
+        { username: new RegExp(input, "i") },
+        { email: new RegExp(input, "i") },
+        { full_name: new RegExp(input, "i") },
+        { location: new RegExp(input, "i") },
+      ],
+    });
+
+    const filteredUsers = allUsers.filter((user) => user._id !== userId);
+
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Users fetched successfully!",
+        users: filteredUsers,
+      });
+  } catch (error) {
+    console.error("Find Users Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: `Find Users Error: ${error.code || error.message}`,
+    });
+  }
+};
