@@ -5,6 +5,7 @@ import {
   discoverUsers,
   followUser,
   getUserData,
+  sendConnectionRequest,
   unfollowUser,
   updateUserData,
 } from "../controllers/userController.js";
@@ -25,5 +26,6 @@ userRouter.post(
 userRouter.post("/discover", protect, discoverUsers);
 userRouter.post("/follow", protect, followUser);
 userRouter.post("/unfollow", protect, unfollowUser);
+userRouter.post("/connect", protect, sendConnectionRequest);
 
 export default userRouter;
