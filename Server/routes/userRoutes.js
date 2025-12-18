@@ -5,6 +5,7 @@ import {
   discoverUsers,
   followUser,
   getUserData,
+  unfollowUser,
   updateUserData,
 } from "../controllers/userController.js";
 import { upload } from "../configs/multer.js";
@@ -22,6 +23,7 @@ userRouter.post(
   updateUserData
 );
 userRouter.post("/discover", protect, discoverUsers);
-userRouter.get("/follow", protect, followUser);
+userRouter.post("/follow", protect, followUser);
+userRouter.post("/unfollow", protect, unfollowUser);
 
 export default userRouter;
