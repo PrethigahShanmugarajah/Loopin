@@ -1,8 +1,8 @@
 // Server / controllers / storyController.js
 import fs from "fs";
-import imagekit from "../configs/imageKit";
-import Story from "../models/Story";
-import User from "../models/User";
+import imagekit from "../configs/imageKit.js";
+import Story from "../models/Story.js";
+import User from "../models/User.js";
 
 /* -------- Add User Story -------- */
 export const addUserStory = async (req, res) => {
@@ -57,13 +57,11 @@ export const getStories = async (req, res) => {
       .populate("user")
       .sort({ createdAt: -1 });
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "User stories fetched successfully!",
-        stories,
-      });
+    res.status(200).json({
+      success: true,
+      message: "User stories fetched successfully!",
+      stories,
+    });
   } catch (error) {
     console.error("Get User Stories Error:", error);
 
