@@ -2,6 +2,7 @@
 import fs from "fs";
 import imagekit from "../configs/imageKit";
 import Story from "../models/Story";
+import User from "../models/User";
 
 /* -------- Add User Story -------- */
 export const addUserStory = async (req, res) => {
@@ -39,6 +40,36 @@ export const addUserStory = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: `Add User Story Error: ${error.code || error.message}`,
+    });
+  }
+};
+
+/* -------- Get User Stories -------- */
+export const getStories = async (req, res) => {
+  try {
+    const { userId } = req.auth();
+    const user = await User.findById(userId);
+
+    // User connections and followings
+    const userIds = [userId, ...user.connections, ...user.following];
+
+    const stories = await Story.find({ user: { $in: userIds } })
+      .populate("user")
+      .sort({ createdAt: -1 });
+
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "User stories fetched successfully!",
+        stories,
+      });
+  } catch (error) {
+    console.error("Get User Stories Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: `Get User Stories Error: ${error.code || error.message}`,
     });
   }
 };
