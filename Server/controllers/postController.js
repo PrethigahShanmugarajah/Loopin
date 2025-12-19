@@ -2,6 +2,7 @@
 import fs from "fs";
 import imagekit from "../configs/imageKit.js";
 import Post from "../models/Post.js";
+import User from "../models/User.js";
 
 /* -------- Add Post -------- */
 export const addPost = async (req, res) => {
@@ -51,6 +52,35 @@ export const addPost = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: `Add Post Error: ${error.code || error.message}`,
+    });
+  }
+};
+
+/* -------- Get Posts -------- */
+export const getFeedPosts = async (req, res) => {
+  try {
+    const { userId } = req.auth();
+    const user = await User.findById(userId);
+
+    // User connections and followings
+    const userIds = [userId, ...user.connections, ...user.following];
+    const posts = await Post.find({ user: { $in: userIds } })
+      .populate("user")
+      .sort({ createdAt: -1 });
+
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Feed posts fetched successfully!",
+        posts,
+      });
+  } catch (error) {
+    console.error("Get Posts Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: `Get Posts Error: ${error.code || error.message}`,
     });
   }
 };
