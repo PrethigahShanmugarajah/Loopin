@@ -1,9 +1,10 @@
 // Server/inngest/index.js
-import { Inngest } from "inngest";
+import { Inngest, step } from "inngest";
 import User from "../models/User.js";
 import Connection from "../models/Connection.js";
 import sendEmail from "../configs/nodeMailer.js";
 import Story from "../models/Story.js";
+import Message from "../models/Message.js";
 
 /* -------- CREATE A CLIENT TO SEND AND RECEIVE EVENTS -------- */
 export const inngest = new Inngest({ id: "loopin-app" });
@@ -178,6 +179,57 @@ const deleteStory = inngest.createFunction(
   }
 );
 
+/* -------- INNGEST FUNCTION TO SEND NOTIFICATION OF UNSEEN MESSAGES -------- */
+const sendNotificationOfUnSeenMessages = inngest.createFunction(
+  { id: "send-unseen-messages-notification" },
+  { cron: "TZ=America/New_York 0 9 * * *" }, // Every Day 9 AM
+  async ({ step }) => {
+    const messages = await Message.find({ seen: false }).populate("to_user_id");
+    const unseenCount = {};
+
+    messages.map((message) => {
+      unseenCount[message.to_user_id._id] =
+        (unseenCount[message.to_user_id._id] || 0) + 1;
+    });
+
+    for (const userId in unseenCount) {
+      const user = await User.findById(userId);
+
+      const subject = `💬 You have ${unseenCount[userId]} unseen messages`;
+
+      const body = `<div style="font-family: Inria Serif, serif; padding: 20px;">
+          <h2>Hi ${user.full_name},</h2>
+
+          <p>You have ${unseenCount[userId]} unseen messages</p>
+
+          <p>
+            Click
+            <a
+              href="${process.env.FRONTEND_URL}/messages"
+              style="color: #F97316;"
+            >
+              here
+            </a>
+           to view them.
+          </p>
+
+          <br />
+
+          <p>
+            Thanks, <br />Loopin - Stay Connected
+          </p>
+        </div>`;
+
+      await sendEmail({
+        to: user.email,
+        subject,
+        body,
+      });
+    }
+    return { message: "Notification sent." };
+  }
+);
+
 /* -------- CREATE AN EMPTY ARRAY WHERE WE'LL EXPORT FUTURE INNGEST FUNCTIONS -------- */
 export const functions = [
   syncUserCreation,
@@ -185,4 +237,5 @@ export const functions = [
   syncUserDeletion,
   sendNewConnectionRequestReminder,
   deleteStory,
+  sendNotificationOfUnSeenMessages,
 ];
