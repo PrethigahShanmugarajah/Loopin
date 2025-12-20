@@ -111,19 +111,42 @@ export const getChatMessages = async (req, res) => {
       { seen: true }
     );
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Chat messages fetched successfully!",
-        data: messages,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Chat messages fetched successfully!",
+      data: messages,
+    });
   } catch (error) {
     console.error("Get Chat Messages Error:", error);
 
     return res.status(500).json({
       success: false,
       message: `Get Chat Messages Error: ${error.code || error.message}`,
+    });
+  }
+};
+
+/* -------- Get User Recent Messages -------- */
+export const getUserRecentMessages = async (req, res) => {
+  try {
+    const { userId } = req.auth();
+    const messages = await Message.find(
+      { to_user_id: userId }.populate("from_user_id to_user_id")
+    ).sort({ created_at: -1 });
+
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Recent messages fetched successfully!",
+        data: messages,
+      });
+  } catch (error) {
+    console.error("Get User Recent Messages Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: `Get User Recent Messages Error: ${error.code || error.message}`,
     });
   }
 };
