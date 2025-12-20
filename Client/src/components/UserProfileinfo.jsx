@@ -1,4 +1,4 @@
-import React from "react";
+// Client / src / components / UserProfileinfo.jsx
 import { Calendar, MapPin, PenBox, Verified } from "lucide-react";
 import { dummyUserData } from "../assets/assets";
 import { timeAgo } from "../utils/timeUtils";
@@ -33,7 +33,7 @@ const UserProfileinfo = ({
               <p>{user.username ? `@${user.username}` : "Add a username"}</p>
             </div>
 
-            {/* ---------------- IF USER IS NOT ON OTHERS PROFILE THAT MEANS HE IS OPENING HIS PROFILE SO WE WILL GIVE EDIT BUTTON  ---------------- */}
+            {/* -------- IF USER IS NOT ON OTHERS PROFILE THAT MEANS HE IS OPENING HIS PROFILE SO WE WILL GIVE EDIT BUTTON -------- */}
             {!profileId && (
               <button
                 onClick={() => setShowEdit(true)}
@@ -72,7 +72,7 @@ const UserProfileinfo = ({
 
             <div>
               <span className="sm:text-xl font-bold text-gray-900">
-                {user.followers.length}
+                {user.followers?.length || 0}
               </span>
               <span className="text-xs sm:text-sm text-gray-500 ml-1">
                 Followers
@@ -81,7 +81,7 @@ const UserProfileinfo = ({
 
             <div>
               <span className="sm:text-xl font-bold text-gray-900">
-                {user.following.length}
+                {user.following?.length || 0}
               </span>
               <span className="text-xs sm:text-sm text-gray-500 ml-1">
                 Following
