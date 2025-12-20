@@ -1,12 +1,10 @@
-import React from "react";
-import { dummyUserData } from "../assets/assets";
+// Client / src / components / UserCard.jsx
 import { MapPin, MessageCircle, Plus, UserPlus } from "lucide-react";
+import { useSelector } from "react-redux";
 
 const UserCard = ({ user }) => {
-  const currentUser = dummyUserData;
-
+  const currentUser = useSelector((state) => state.user.value);
   const handleFollow = async () => {};
-
   const handleConnectionRequest = async () => {};
 
   return (
@@ -45,7 +43,7 @@ const UserCard = ({ user }) => {
       </div>
 
       <div className="flex mt-4 gap-2">
-        {/* ---------------- FOLLOW BUTTON ---------------- */}
+        {/* -------- FOLLOW BUTTON -------- */}
         <button
           onClick={handleFollow}
           disabled={currentUser?.following.includes(user._id)}
@@ -55,7 +53,7 @@ const UserCard = ({ user }) => {
           {currentUser?.following.includes(user._id) ? "Following" : "Follow"}
         </button>
 
-        {/* ---------------- CONNECTION REQUEST BUTTON / MESSAGE BUTTON ---------------- */}
+        {/* -------- CONNECTION REQUEST BUTTON / MESSAGE BUTTON -------- */}
         <button
           onClick={handleConnectionRequest}
           className="flex items-center justify-center w-16 border text-scale-500 group rounded-md cursor-pointer active:scale-95 transition"
