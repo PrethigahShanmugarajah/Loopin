@@ -66,7 +66,13 @@ export const sendMessage = async (req, res) => {
       media_url,
     });
 
-    res.json({ success: true, message });
+    res
+      .status(201)
+      .json({
+        success: true,
+        message: "Message sent successfully!",
+        data: message,
+      });
 
     // Send message to to_user_id using SSE
     const messageWithUserData = await Message.findById(message.id).populate(
