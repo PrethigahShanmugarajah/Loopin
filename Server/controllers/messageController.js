@@ -66,13 +66,11 @@ export const sendMessage = async (req, res) => {
       media_url,
     });
 
-    res
-      .status(201)
-      .json({
-        success: true,
-        message: "Message sent successfully!",
-        data: message,
-      });
+    res.status(201).json({
+      success: true,
+      message: "Message sent successfully!",
+      data: message,
+    });
 
     // Send message to to_user_id using SSE
     const messageWithUserData = await Message.findById(message.id).populate(
@@ -90,6 +88,42 @@ export const sendMessage = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: `Send Message Error: ${error.code || error.message}`,
+    });
+  }
+};
+
+/* -------- Get Chat Messages -------- */
+export const getChatMessages = async (req, res) => {
+  try {
+    const { userId } = req.auth();
+    const { to_user_id } = req.body;
+
+    const messages = await Message.find({
+      $or: [
+        { from_user_id: userId, to_user_id },
+        { from_user_id: to_user_id, to_user_id: userId },
+      ],
+    }).sort({ created_at: -1 });
+
+    // Mark messages as seen
+    await Message.updateMany(
+      { from_user_id: to_user_id, to_user_id: userId },
+      { seen: true }
+    );
+
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Chat messages fetched successfully!",
+        data: messages,
+      });
+  } catch (error) {
+    console.error("Get Chat Messages Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: `Get Chat Messages Error: ${error.code || error.message}`,
     });
   }
 };
