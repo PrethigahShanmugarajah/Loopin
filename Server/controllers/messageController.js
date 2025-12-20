@@ -1,4 +1,7 @@
 // Server / controllers / messageController.js
+import fs from "fs";
+import imagekit from "../configs/imageKit.js";
+import Message from "../models/Message.js";
 
 /* -------- Create an empty to store SS Event connections -------- */
 const connections = {};
@@ -26,4 +29,61 @@ export const sseController = async (req, res) => {
     delete connections[userId];
     console.log("Client disconnected");
   });
+};
+
+/* -------- Send Message -------- */
+export const sendMessage = async (req, res) => {
+  try {
+    const { userId } = req.auth();
+    const { to_user_id, text } = req.body;
+    const image = req.file;
+
+    let media_url = "";
+    let message_type = image ? "image" : "text";
+
+    if (message_type === "image") {
+      const fileBuffer = fs.readFileSync(image.path);
+      const response = await imagekit.upload({
+        file: fileBuffer,
+        fileName: image.originalname,
+      });
+
+      media_url = imagekit.url({
+        path: response.filePath,
+        transformation: [
+          { quality: "auto" },
+          { format: "webp" },
+          { width: "1280" },
+        ],
+      });
+    }
+
+    const message = await Message.create({
+      from_user_id: userId,
+      to_user_id,
+      text,
+      message_type,
+      media_url,
+    });
+
+    res.json({ success: true, message });
+
+    // Send message to to_user_id using SSE
+    const messageWithUserData = await Message.findById(message.id).populate(
+      "from_user_id"
+    );
+
+    if (connections[to_user_id]) {
+      connections[to_user_id].write(
+        `data: ${JSON.stringify(messageWithUserData)}\n\n`
+      );
+    }
+  } catch (error) {
+    console.error("Send Message Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: `Send Message Error: ${error.code || error.message}`,
+    });
+  }
 };
