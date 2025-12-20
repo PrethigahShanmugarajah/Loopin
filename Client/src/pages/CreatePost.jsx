@@ -3,20 +3,66 @@ import { useState } from "react";
 import { Image, X } from "lucide-react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
+import api, { authHeader } from "../api/axios";
+import API_ROUTES from "../api/api_route";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@clerk/clerk-react";
 
 const CreatePost = () => {
   const [content, setContent] = useState("");
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const navigate = useNavigate();
   const user = useSelector((state) => state.user.value);
+  const { getToken } = useAuth();
 
-  const handleSubmit = async () => {};
+  const handleSubmit = async () => {
+    if (!images.length && !content) {
+      return toast.error("Please add at least one image or text");
+    }
+    setLoading(true);
+
+    const postType =
+      images.length && content
+        ? "text_with_image"
+        : images.length
+        ? "image"
+        : "text";
+
+    try {
+      const token = await getToken();
+
+      const formData = new FormData();
+      formData.append("content", content);
+      formData.append("post_type", postType);
+      images.map((image) => {
+        formData.append("images", image);
+      });
+
+      const { data } = await api.post(
+        API_ROUTES.POST.ADD_POST,
+        formData,
+        authHeader(token)
+      );
+
+      if (data.success) {
+        navigate("/");
+      } else {
+        console.log("Create Post Error1:", data.message);
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      console.log("Create Post Error2:", error.message);
+      throw new Error(error.message);
+    }
+    setLoading(false);
+  };
 
   return (
     <div className="min-h-screen bg-linear-to-b from-slate-50 to-white">
       <div className="max-w-6xl mx-auto p-6">
-        {/* ---------------- TITLE ---------------- */}
+        {/* -------- TITLE -------- */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-slate-900 mb-2">
             Create Post
@@ -25,7 +71,7 @@ const CreatePost = () => {
           <p className="text-slate-600">Share your thoughts with the world</p>
         </div>
 
-        {/* ---------------- FORM ---------------- */}
+        {/* -------- FORM -------- */}
         <div className="max-w-xl bg-white p-4 sm:p-8 sm:pb-3 rounded-xl shadow-md space-y-4">
           {/* -------- FORM -------- */}
           <div className="flex items-center gap-3">
