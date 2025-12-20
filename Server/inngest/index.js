@@ -3,6 +3,7 @@ import { Inngest } from "inngest";
 import User from "../models/User.js";
 import Connection from "../models/Connection.js";
 import sendEmail from "../configs/nodeMailer.js";
+import Story from "../models/Story.js";
 
 /* -------- CREATE A CLIENT TO SEND AND RECEIVE EVENTS -------- */
 export const inngest = new Inngest({ id: "loopin-app" });
@@ -162,10 +163,26 @@ const sendNewConnectionRequestReminder = inngest.createFunction(
   }
 );
 
+/* -------- INNGEST FUNCTION TO DELETE STORY AFTER 24 HOURS -------- */
+const deleteStory = inngest.createFunction(
+  { id: "story-delete" },
+  { event: "app/story.delete" },
+  async ({ event, step }) => {
+    const { storyId } = event.data;
+    const in24Hours = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    await step.sleepUntil("wait-for-24-hours", in24Hours);
+    await step.run("delete-story", async () => {
+      await Story.findByIdAndDelete(storyId);
+      return { message: "Story deleted!" };
+    });
+  }
+);
+
 /* -------- CREATE AN EMPTY ARRAY WHERE WE'LL EXPORT FUTURE INNGEST FUNCTIONS -------- */
 export const functions = [
   syncUserCreation,
   syncUserUpdation,
   syncUserDeletion,
   sendNewConnectionRequestReminder,
+  deleteStory,
 ];
