@@ -4,6 +4,10 @@ import { BadgeCheck, Heart, MessageCircle, Share2 } from "lucide-react";
 import { timeAgo } from "../utils/timeUtils";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useAuth } from "@clerk/clerk-react";
+import api, { authHeader } from "../api/axios";
+import API_ROUTES from "../api/api_route";
+import toast from "react-hot-toast";
 
 const PostCard = ({ post }) => {
   const postWithHashtags = post.content.replace(
@@ -13,10 +17,36 @@ const PostCard = ({ post }) => {
 
   const [likes, setLikes] = useState(post.likes_count);
   const navigate = useNavigate();
+  const { getToken } = useAuth();
 
   const currentUser = useSelector((state) => state.user.value);
 
-  const handleLike = async () => {};
+  const handleLike = async () => {
+    try {
+      const token = await getToken();
+
+      const { data } = await api.post(
+        API_ROUTES.POST.LIKE_POST,
+        { postId: post._id },
+        authHeader(token)
+      );
+
+      if (data.success) {
+        toast.success(data.message);
+        setLikes((prev) => {
+          if (prev.includes(currentUser._id)) {
+            return prev.filter((id) => id !== currentUser._id);
+          } else {
+            return [...prev, currentUser._id];
+          }
+        });
+      } else {
+        toast(data.message);
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error?.message);
+    }
+  };
 
   return (
     <div className="bg-white rounded-xl shadow p-4 space-y-4 w-full max-w-2xl">
@@ -64,7 +94,7 @@ const PostCard = ({ post }) => {
         ))}
       </div>
 
-      {/*---------------- ACTIONS----------------*/}
+      {/* -------- ACTIONS -------- */}
       <div className="flex items-center gap-4 text-gray-600 text-sm pt-2 border-t border-gray-300">
         <div className="flex items-center gap-1">
           <Heart
