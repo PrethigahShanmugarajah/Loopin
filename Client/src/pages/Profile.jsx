@@ -1,34 +1,61 @@
-import React, { useEffect, useState } from "react";
+// Client / src / pages / Profile.jsx
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { dummyPostsData, dummyUserData } from "../assets/assets";
 import Loading from "../components/Loading";
 import UserProfileinfo from "../components/UserProfileinfo";
 import PostCard from "../components/PostCard";
 import { timeAgo } from "../utils/timeUtils";
 import ProfileModal from "../components/ProfileModal";
+import { useAuth } from "@clerk/clerk-react";
+import api, { authHeader } from "../api/axios";
+import API_ROUTES from "../api/api_route";
+import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 
 const Profile = () => {
+  const currentUser = useSelector((state) => state.user.value);
+
+  const { getToken } = useAuth();
   const { profileId } = useParams();
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const [activeTab, setActiveTab] = useState("posts");
   const [showEdit, setShowEdit] = useState(false);
 
-  const fetchUser = async () => {
-    setUser(dummyUserData);
-    setPosts(dummyPostsData);
+  const fetchUser = async (profileId) => {
+    const token = await getToken();
+
+    try {
+      const { data } = await api.post(
+        API_ROUTES.USER.GET_USER_PROFILE,
+        { profileId },
+        authHeader(token)
+      );
+      if (data.success) {
+        setUser(data.profile);
+        setPosts(data.posts);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error?.message);
+    }
   };
 
   useEffect(() => {
-    fetchUser();
-  }, []);
+    if (profileId) {
+      fetchUser(profileId);
+    } else {
+      fetchUser(currentUser._id);
+    }
+  }, [profileId, currentUser]);
 
   return user ? (
     <div className="relative h-full overflow-y-scroll bg-gray-50 p-6">
       <div className="max-w-3xl mx-auto">
-        {/* ---------------- PROFILE CARD ---------------- */}
+        {/* -------- PROFILE CARD -------- */}
         <div className="bg-white rounded-2xl shadow overflow-hidden">
-          {/* ---------------- COVER PHOTO ---------------- */}
+          {/* -------- COVER PHOTO -------- */}
           <div className="h-40 md:h-56 bg-linear-to-r from-orange-200 via-rose-200 to-pink-200">
             {user.cover_photo && (
               <img
@@ -39,7 +66,7 @@ const Profile = () => {
             )}
           </div>
 
-          {/* ---------------- USER INFORMATION ---------------- */}
+          {/* -------- USER INFORMATION -------- */}
           <UserProfileinfo
             user={user}
             posts={posts}
@@ -48,7 +75,7 @@ const Profile = () => {
           />
         </div>
 
-        {/* ---------------- TABS ---------------- */}
+        {/* -------- TABS -------- */}
         <div className="mt-6">
           <div className="bg-white rounded-xl shadow p-1 flex max-w-md mx-auto">
             {["posts", "media", "likes"].map((tab) => (
@@ -67,7 +94,7 @@ const Profile = () => {
           </div>
         </div>
 
-        {/* ---------------- POSTS ---------------- */}
+        {/* -------- POSTS -------- */}
         {activeTab === "posts" && (
           <div className="mt-6 flex flex-col items-center gap-6">
             {posts.map((post) => (
@@ -76,7 +103,7 @@ const Profile = () => {
           </div>
         )}
 
-        {/* ---------------- MEDIA ---------------- */}
+        {/* -------- MEDIA -------- */}
         {activeTab === "media" && (
           <div className="flex flex-wrap mt-6 max-w-6xl">
             {posts
@@ -107,7 +134,7 @@ const Profile = () => {
         )}
       </div>
 
-      {/* ---------------- EDIT PROFILE MODAL ---------------- */}
+      {/* -------- EDIT PROFILE MODAL -------- */}
 
       {showEdit && <ProfileModal setShowEdit={setShowEdit} />}
     </div>
