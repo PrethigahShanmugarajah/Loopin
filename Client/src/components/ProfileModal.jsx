@@ -1,9 +1,15 @@
 // Client / src / components / ProfileModal.jsx
 import { useState } from "react";
 import { Pencil } from "lucide-react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useAuth } from "@clerk/clerk-react";
+import toast from "react-hot-toast";
+import { updateUser } from "../features/user/userSlice";
 
 const ProfileModal = ({ setShowEdit }) => {
+  const dispatch = useDispatch();
+  const { getToken } = useAuth();
+
   const user = useSelector((state) => state.user.value);
 
   const [editForm, setEditForm] = useState({
@@ -16,6 +22,31 @@ const ProfileModal = ({ setShowEdit }) => {
 
   const handleSveProfile = async (e) => {
     e.preventDefault();
+    try {
+      const userData = new FormData();
+      const {
+        full_name,
+        username,
+        bio,
+        location,
+        profile_picture,
+        cover_photo,
+      } = editForm;
+
+      userData.append("username", username);
+      userData.append("bio", bio);
+      userData.append("location", location);
+      userData.append("full_name", full_name);
+      profile_picture && userData.append("profile", profile_picture);
+      cover_photo && userData.append("cover", cover_photo);
+
+      const token = await getToken();
+      dispatch(updateUser({ userData, token }));
+
+      setShowEdit(false);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error?.message);
+    }
   };
 
   return (
@@ -26,8 +57,13 @@ const ProfileModal = ({ setShowEdit }) => {
             Edit Profile
           </h1>
 
-          <form className="space-y-4" onSubmit={handleSveProfile}>
-            {/* ---------------- PROFILE PICTURE ---------------- */}
+          <form
+            className="space-y-4"
+            onSubmit={(e) =>
+              toast.promise(handleSveProfile(e), { loading: "Saving..." })
+            }
+          >
+            {/* -------- PROFILE PICTURE -------- */}
             <div className="flex flex-col items-start gap-3">
               <label
                 htmlFor="profile_picture"
@@ -55,17 +91,17 @@ const ProfileModal = ({ setShowEdit }) => {
                         : user.profile_picture
                     }
                     alt=""
-                    className="w-24 h-24 rounded-full object-cover mt-2"
+                    className="w-24 h-24 rounded-full object-cover mt-2 cursor-pointer"
                   />
 
-                  <div className="absolute hidden group-hover/profile:flex top-0 left-0 right-0 bottom-0 bg-black/20 rounded-full items-center justify-center">
+                  <div className="absolute hidden group-hover/profile:flex top-0 left-0 right-0 bottom-0 bg-black/20 rounded-full items-center justify-center cursor-pointer">
                     <Pencil className="w-5 h-5 text-white" />
                   </div>
                 </div>
               </label>
             </div>
 
-            {/* ---------------- COVER PHOTO ---------------- */}
+            {/* -------- COVER PHOTO -------- */}
             <div className="flex flex-col items-start gap-3">
               <label
                 htmlFor="cover_photo"
@@ -96,14 +132,14 @@ const ProfileModal = ({ setShowEdit }) => {
                     className="w-80 h-40 rounded-lg bg-gradiennt-to-r from-orange-200 via-rose-200 to-pink-200 object-cover mt-2"
                   />
 
-                  <div className="absolute hidden group-hover/cover:flex top-0 left-0 right-0 bottom-0 bg-black/20 rounded-lg items-center justify-center">
+                  <div className="absolute hidden group-hover/cover:flex top-0 left-0 right-0 bottom-0 bg-black/20 rounded-lg items-center justify-center cursor-pointer">
                     <Pencil className="w-5 h-5 text-white" />
                   </div>
                 </div>
               </label>
             </div>
 
-            {/* ---------------- FULL NAME ---------------- */}
+            {/* -------- FULL NAME -------- */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Full Name{" "}
@@ -112,14 +148,14 @@ const ProfileModal = ({ setShowEdit }) => {
                   className="w-full p-3 border border-gray-200 rounded-lg"
                   placeholder="Please enter your full name"
                   onChange={(e) =>
-                    setEditForm({ ...editForm, nafull_nameme: e.target.value })
+                    setEditForm({ ...editForm, full_name: e.target.value })
                   }
                   value={editForm.full_name}
                 />{" "}
               </label>
             </div>
 
-            {/* ---------------- USERNAME ---------------- */}
+            {/* -------- USERNAME -------- */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Username{" "}
@@ -135,7 +171,7 @@ const ProfileModal = ({ setShowEdit }) => {
               </label>
             </div>
 
-            {/* ---------------- BIO ---------------- */}
+            {/* -------- BIO -------- */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Bio{" "}
@@ -151,7 +187,7 @@ const ProfileModal = ({ setShowEdit }) => {
               </label>
             </div>
 
-            {/* ---------------- LOCATION ---------------- */}
+            {/* -------- LOCATION -------- */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Location{" "}
@@ -167,7 +203,7 @@ const ProfileModal = ({ setShowEdit }) => {
               </label>
             </div>
 
-            {/* ---------------- CANCEL / SAVECHANGES BUTTON ---------------- */}
+            {/* -------- CANCEL / SAVECHANGES BUTTON -------- */}
             <div className="flex justify-end space-x-3 pt-6">
               <button
                 onClick={() => setShowEdit(false)}
