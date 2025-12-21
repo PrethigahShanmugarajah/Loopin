@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+// Client / src / components / StoryViewer.jsx
+import { useEffect, useState } from "react";
 import { BadgeCheck, X } from "lucide-react";
 
 const StoryViewer = ({ viewStory, setViewStory }) => {
@@ -19,7 +20,7 @@ const StoryViewer = ({ viewStory, setViewStory }) => {
         setProgress((elapsed / duration) * 100);
       }, setTime);
 
-      /* -------- CLOSE STORY AFTER DURATION(10SEC) -------- */
+      /* ---- CLOSE STORY AFTER DURATION(10SEC) ---- */
       timer = setTimeout(() => {
         setViewStory(null);
       }, duration);
@@ -42,7 +43,7 @@ const StoryViewer = ({ viewStory, setViewStory }) => {
       case "image":
         return (
           <img
-            src={viewStory.media_url}
+            src={viewStory.media_urls[0]}
             alt="Story Image"
             className="max-w-full max-h-screen object-contain"
           />
@@ -51,7 +52,7 @@ const StoryViewer = ({ viewStory, setViewStory }) => {
         return (
           <video
             onEnded={() => setViewStory(null)}
-            src={viewStory.media_url}
+            src={viewStory.media_urls[0]}
             className="max-h-screen"
             controls
             autoPlay
@@ -78,7 +79,7 @@ const StoryViewer = ({ viewStory, setViewStory }) => {
             : "#000000",
       }}
     >
-      {/*---------------- PROGRESS BAR ----------------*/}
+      {/* -------- PROGRESS BAR -------- */}
       <div className="absolute top-0 left-0 w-full h-1 bg-gray-700">
         <div
           className="h-full bg-white transition-all duration-100 linear"
@@ -86,7 +87,7 @@ const StoryViewer = ({ viewStory, setViewStory }) => {
         ></div>
       </div>
 
-      {/*---------------- USER INFO - TOP LEFT ----------------*/}
+      {/* -------- USER INFO - TOP LEFT -------- */}
       <div className="absolute top-4 left-4 flex items-center space-x-3 p-2 px-4 sm:p-4 sm:px-8 backdrop:blur-2xl rounded bg-black/50">
         <img
           src={viewStory.user?.profile_picture}
@@ -100,7 +101,7 @@ const StoryViewer = ({ viewStory, setViewStory }) => {
         </div>
       </div>
 
-      {/*---------------- CLOSE BUTTON ----------------*/}
+      {/* -------- CLOSE BUTTON -------- */}
       <button
         onClick={handleClose}
         className="absolute top-4 right-4 text-white text-3xl font-bold focus:outline-none"
@@ -108,7 +109,7 @@ const StoryViewer = ({ viewStory, setViewStory }) => {
         <X className="w-8 h-8 hover:scale-110 transition cursor-pointer" />
       </button>
 
-      {/*---------------- CONTENT WRAPPER ----------------*/}
+      {/* -------- CONTENT WRAPPER -------- */}
       <div className="max-w-[90vw] max-h-[90vh] flex items-center justify-center">
         {renderContent()}
       </div>
