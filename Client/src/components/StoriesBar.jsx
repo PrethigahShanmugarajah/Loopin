@@ -1,17 +1,37 @@
-import React, { useEffect, useState } from "react";
-import { dummyStoriesData } from "../assets/assets";
+// Client / src / components / StoriesBar.jsx
+import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { timeAgo } from "../utils/timeUtils";
 import StoryModal from "./StoryModal";
 import StoryViewer from "./StoryViewer";
+import { useAuth } from "@clerk/clerk-react";
+import api, { authHeader } from "../api/axios";
+import API_ROUTES from "../api/api_route";
+import toast from "react-hot-toast";
 
 const StoriesBar = () => {
   const [stories, setStories] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [viewStory, setViewStory] = useState(null);
 
+  const { getToken } = useAuth();
+
   const fetchStories = async () => {
-    setStories(dummyStoriesData);
+    try {
+      const token = await getToken();
+      const { data } = await api.get(
+        API_ROUTES.STORY.GET_STORIES,
+        authHeader(token)
+      );
+
+      if (data.success) {
+        setStories(data.stories);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error?.message);
+    }
   };
 
   useEffect(() => {
@@ -21,7 +41,7 @@ const StoriesBar = () => {
   return (
     <div className="w-screen sm:w-[calc(100vw-240px)] lg:max-w-2xl no-scrollbar overflow-x-auto px-4">
       <div className="flex gap-4 pb-5">
-        {/* ---------------- ADD STORY CARD ---------------- */}
+        {/* -------- ADD STORY CARD -------- */}
         <div
           onClick={() => setShowModal(true)}
           className="rounded-lg shadow-sm min-w-30 max-w-30 max-h-40 aspect-3/4 cursor-pointer hover:shadow-lg transition-all duration-200 border border-dashed border-orange-300 bg-linear-to-b from-orange-50 to-white"
@@ -37,7 +57,7 @@ const StoriesBar = () => {
           </div>
         </div>
 
-        {/* ---------------- STORY CARDS ---------------- */}
+        {/* -------- STORY CARDS -------- */}
         {stories.map((story, index) => (
           <div
             onClick={() => setViewStory(story)}
@@ -77,12 +97,12 @@ const StoriesBar = () => {
           </div>
         ))}
 
-        {/*---------------- ADD STORY MODAL ----------------*/}
+        {/* -------- ADD STORY MODAL -------- */}
         {showModal && (
           <StoryModal setShowModal={setShowModal} fetchStories={fetchStories} />
         )}
 
-        {/*---------------- VIEW STORY MODAL ----------------*/}
+        {/* -------- VIEW STORY MODAL -------- */}
         {viewStory && (
           <StoryViewer viewStory={viewStory} setViewStory={setViewStory} />
         )}
