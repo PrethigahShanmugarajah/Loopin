@@ -1,5 +1,5 @@
 // Client / src / App.jsx
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Login from "./pages/Login";
 import Feed from "./pages/Feed";
 import Messages from "./pages/Messages";
@@ -15,10 +15,14 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { fetchUser } from "./features/user/userSlice";
 import { fetchConnections } from "./features/connections/connectionsSlice";
+import { useRef } from "react";
+import { addMessage } from "./features/messages/messagesSlice";
 
 const App = () => {
   const { user } = useUser();
   const { getToken } = useAuth();
+  const { pathname } = useLocation();
+  const pathnameRef = useRef(pathname);
 
   const dispatch = useDispatch();
 
@@ -26,13 +30,38 @@ const App = () => {
     const fetchData = async () => {
       if (user) {
         const token = await getToken();
-        console.log("Token:", token);
+        // console.log("Token:", token);
         dispatch(fetchUser(token));
         dispatch(fetchConnections(token));
       }
     };
     fetchData();
   }, [user, getToken, dispatch]);
+
+  useEffect(() => {
+    pathnameRef.current = pathname;
+  }, [pathname]);
+
+  useEffect(() => {
+    if (user) {
+      const eventSource = new EventSource(
+        import.meta.env.VITE_BASEURL + "/api/message/" + user.id
+      );
+
+      eventSource.onmessage = (event) => {
+        const message = JSON.parse(event.data);
+
+        if (pathnameRef.current === "/messages/" + message.from_user_id._id) {
+          dispatch(addMessage(message));
+        } else {
+        }
+      };
+
+      return () => {
+        eventSource.close();
+      };
+    }
+  }, [user, dispatch]);
 
   return (
     <>
