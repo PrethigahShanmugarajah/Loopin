@@ -35,7 +35,8 @@ const Connections = () => {
 
   const handleFollow = async (userId) => {
     try {
-      const { data } = await api.get(
+      const token = await getToken();
+      const { data } = await api.post(
         API_ROUTES.USER.UNFOLLOW_USER,
         { id: userId },
         authHeader(token)
@@ -136,8 +137,8 @@ const Connections = () => {
             .find((item) => item.label === currentTab)
             ?.value?.map((user) => (
               <div
-                key={user.id}
-                className="'w-full max-w-88 flex gap-5 p-6 bg-white shadow rounded-md"
+                key={user._id}
+                className="w-full max-w-88 flex gap-5 p-6 bg-white shadow rounded-md"
               >
                 <img
                   className="rounded-full w-12 h-12 shadow-md mx-auto"
@@ -154,7 +155,7 @@ const Connections = () => {
                   <div className="flex max-sm:flex-col gap-2 mt-4">
                     {
                       <button
-                        onClick={() => navigate(`/profile/${user.id}`)}
+                        onClick={() => navigate(`/profile/${user._id}`)}
                         className="w-full p-2 text-sm rounded bg-linear-to-r from-orange-500 to-rose-600 hover:from-orange-600 hover:to-rose-700 active:scale-95 transition text-white cursor-pointer"
                       >
                         View Profile
