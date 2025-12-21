@@ -54,7 +54,8 @@ const Connections = () => {
 
   const acceptConnection = async (userId) => {
     try {
-      const { data } = await api.get(
+      const token = await getToken();
+      const { data } = await api.post(
         API_ROUTES.USER.ACCEPT_CONNECTION_REQUEST,
         { id: userId },
         authHeader(token)
