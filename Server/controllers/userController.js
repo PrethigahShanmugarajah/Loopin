@@ -192,8 +192,7 @@ export const unfollowUser = async (req, res) => {
 
     const toUser = await User.findById(id);
     toUser.followers = toUser.followers.filter((user) => user !== userId);
-
-    await user.save();
+    await toUser.save();
 
     res.status(200).json({
       success: true,
