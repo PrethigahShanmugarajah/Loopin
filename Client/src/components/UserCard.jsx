@@ -46,11 +46,13 @@ const UserCard = ({ user }) => {
         {/* -------- FOLLOW BUTTON -------- */}
         <button
           onClick={handleFollow}
-          disabled={currentUser?.following.includes(user._id)}
+          // disabled={currentUser?.following.includes(user._id)}
+          disabled={currentUser?.following?.includes(user._id) || false}
           className="w-full py-2 rounded-md flex justify-center items-center gap-2 bg-linear-to-r from-orange-500 to-rose-600 hover:from-orange-600 hover:to-rose-700 active:scale-95 transition text-white cursor-pointer"
         >
           <UserPlus className="w-4 h-4" />{" "}
-          {currentUser?.following.includes(user._id) ? "Following" : "Follow"}
+          {/* {currentUser?.following.includes(user._id) ? "Following" : "Follow"} */}
+          {currentUser?.following?.includes(user._id) ? "Following" : "Follow"}
         </button>
 
         {/* -------- CONNECTION REQUEST BUTTON / MESSAGE BUTTON -------- */}
@@ -58,7 +60,7 @@ const UserCard = ({ user }) => {
           onClick={handleConnectionRequest}
           className="flex items-center justify-center w-16 border text-scale-500 group rounded-md cursor-pointer active:scale-95 transition"
         >
-          {currentUser?.connections.includes(user._id) ? (
+          {currentUser?.connections?.includes(user._id) ? (
             <MessageCircle className="w-5 h-5 group-hover:scale-105 transition" />
           ) : (
             <Plus className="w-5 h-5 group-hover:scale-105 transition" />
