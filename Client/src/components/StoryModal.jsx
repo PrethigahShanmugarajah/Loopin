@@ -1,6 +1,10 @@
-import React, { useState } from "react";
+// Client / src / components / StoryModal.jsx
+import { useState } from "react";
 import { ArrowLeft, Sparkle, TextIcon, Upload } from "lucide-react";
 import toast from "react-hot-toast";
+import { useAuth } from "@clerk/clerk-react";
+import api, { authHeader } from "../api/axios";
+import API_ROUTES from "../api/api_route";
 
 const StoryModal = ({ setShowModal, fetchStories }) => {
   const bgColors = [
@@ -22,15 +26,83 @@ const StoryModal = ({ setShowModal, fetchStories }) => {
   const [media, setMedia] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
 
+  const { getToken } = useAuth();
+
+  const MAX_VIDEO_DURATION = 60; // Seconds
+  const MAX_VIDEO_SIZE_MB = 50; // MB
+
   const handleMediaUpload = (e) => {
     const file = e.target.files?.[0];
     if (file) {
-      setMedia(file);
-      setPreviewUrl(URL.createObjectURL(file));
+      if (file.type.startsWith("video")) {
+        if (file.size > MAX_VIDEO_SIZE_MB * 1024 * 1024) {
+          toast.error(`Video file size cannot exceed ${MAX_VIDEO_SIZE_MB}MB.`);
+          setMedia(null);
+          setPreviewUrl(null);
+          return;
+        }
+        const video = document.createElement("video");
+        video.preload = "metadata";
+        video.onloadedmetadata = () => {
+          window.URL.revokeObjectURL(video.src);
+          if (video.duration > MAX_VIDEO_DURATION) {
+            toast.error("Video duration cannot exceed 1 minute.");
+            setMedia(null);
+            setPreviewUrl(null);
+          } else {
+            setMedia(file);
+            setPreviewUrl(URL.createObjectURL(file));
+            setText("");
+            setMode("media");
+          }
+        };
+        video.src = URL.createObjectURL(file);
+      } else if (file.type.startsWith("image")) {
+        setMedia(file);
+        setPreviewUrl(URL.createObjectURL(file));
+        setText("");
+        setMode("media");
+      }
     }
   };
 
-  const handleCreateStory = async () => {};
+  const handleCreateStory = async () => {
+    const media_type =
+      mode === "media"
+        ? media?.type.startsWith("image")
+          ? "image"
+          : "video"
+        : "text";
+
+    if (media_type === "text" && !text) {
+      throw new Error("Please enter some text");
+    }
+
+    let formData = new FormData();
+    formData.append("content", text);
+    formData.append("media_type", media_type);
+    formData.append("media", media);
+    formData.append("background_color", background);
+
+    const token = await getToken();
+    try {
+      const { data } = await api.post(
+        API_ROUTES.STORY.ADD_USER_STORY,
+        formData,
+        authHeader(token)
+      );
+
+      if (data.success) {
+        setShowModal(false);
+        toast.success(data.message);
+        fetchStories();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error?.message);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-100 min-h-screen bg-black/80 backdrop-blur text-white flex items-center justify-center p-4">
@@ -53,6 +125,7 @@ const StoryModal = ({ setShowModal, fetchStories }) => {
         >
           {mode === "text" && (
             <textarea
+              value={text}
               className="bg-transparent text-white w-full h-full p-6 text-lg resize-none focus:outline-none"
               placeholder="What is on your mind?"
               onChange={(e) => setText(e.target.value)}
@@ -68,7 +141,11 @@ const StoryModal = ({ setShowModal, fetchStories }) => {
                 className="object-contain max-h-full"
               />
             ) : (
-              <video src={previewUrl} className="object-contain max-h-full" />
+              <video
+                src={previewUrl}
+                controls
+                className="object-contain max-h-full"
+              />
             ))}
         </div>
 
@@ -103,10 +180,7 @@ const StoryModal = ({ setShowModal, fetchStories }) => {
             }`}
           >
             <input
-              onChange={(e) => {
-                handleMediaUpload(e);
-                setMode("media");
-              }}
+              onChange={handleMediaUpload}
               type="file"
               accept="image/*, video/*"
               className="hidden"
@@ -117,11 +191,7 @@ const StoryModal = ({ setShowModal, fetchStories }) => {
 
         <button
           onClick={() =>
-            toast.promise(handleCreateStory(), {
-              loading: "Saving...",
-              success: <p>Story Added</p>,
-              error: (e) => <p>{e.message}</p>,
-            })
+            toast.promise(handleCreateStory(), { loading: "Saving..." })
           }
           className="flex items-center justify-center gap-2 text-white py-3 mt-4 w-full rounded bg-linear-to-r from-orange-500 to-rose-600 hover:from-orange-600 hover:to-rose-700 active:scale-95 transition cursor-pointer"
         >
