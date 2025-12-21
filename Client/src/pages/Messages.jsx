@@ -1,15 +1,17 @@
-import React from "react";
-import { dummyConnectionsData } from "../assets/assets";
+// Client / src / pages / Messages.jsx
 import { Eye, MessageSquare } from "lucide-react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const Messages = () => {
+  const { connections } = useSelector((state) => state.connections);
+
   const navigate = useNavigate();
 
   return (
     <div className="min-h-screen relative bg-slate-50">
       <div className="max-w-6xl mx-auto p-6">
-        {/*---------------- TITLE ----------------*/}
+        {/* -------- TITLE -------- */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-slate-900 mb-2">Messages</h1>
 
@@ -18,9 +20,9 @@ const Messages = () => {
           </p>
         </div>
 
-        {/*---------------- CONNECTED USERS ----------------*/}
+        {/* -------- CONNECTED USERS -------- */}
         <div className="flex flex-col gap-3">
-          {dummyConnectionsData.map((user) => (
+          {connections.map((user) => (
             <div
               key={user._id}
               className="max-w-xl flex flex-wrap gap-5 p-6 bg-white shadow rounded-md"
