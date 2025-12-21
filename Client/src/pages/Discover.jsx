@@ -1,28 +1,55 @@
-import React, { useState } from "react";
-import { dummyConnectionsData } from "../assets/assets";
+// Client / src / pages / Discover.jsx
+import { useEffect, useState } from "react";
 import { Search } from "lucide-react";
 import UserCard from "../components/UserCard";
 import Loading from "../components/Loading";
+import api, { authHeader } from "../api/axios";
+import API_ROUTES from "../api/api_route";
+import { useAuth } from "@clerk/clerk-react";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { fetchUser } from "../features/user/userSlice";
 
 const Discover = () => {
   const [input, setInput] = useState("");
-  const [users, setUsers] = useState(dummyConnectionsData);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const handleSearch = (e) => {
+  const { getToken } = useAuth();
+  const dispatch = useDispatch();
+
+  const handleSearch = async (e) => {
     if (e.key === "Enter") {
-      setUsers([]);
-      setLoading(true);
-      setTimeout(() => {
-        setUsers(dummyConnectionsData);
+      try {
+        const token = await getToken();
+
+        setUsers([]);
+        setLoading(true);
+        const { data } = await api.post(
+          API_ROUTES.USER.DISCOVER_USERS,
+          { input },
+          authHeader(token)
+        );
+        data.success ? setUsers(data.users) : toast.error(data.message);
         setLoading(false);
-      }, 1000);
+        setInput("");
+      } catch (error) {
+        toast.error(error?.response?.data?.message || error?.message);
+      }
+      setLoading(false);
     }
   };
+
+  useEffect(() => {
+    getToken().then((token) => {
+      dispatch(fetchUser(token));
+    });
+  }, []);
+
   return (
     <div className="min-h-screen bg-linear-to-b from-slate-50 to-white">
       <div className="max-w-6xl mx-auto p-6">
-        {/* ---------------- TITLE ---------------- */}
+        {/* -------- TITLE -------- */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-slate-900 mb-2">
             Discover People
@@ -32,7 +59,7 @@ const Discover = () => {
           </p>
         </div>
 
-        {/* ---------------- SEARCH ---------------- */}
+        {/* -------- SEARCH -------- */}
         <div className="mb-8 shadow-md rounded-md border border-slate-200/60 bg-white/80">
           <div className="p-6">
             <div className="relative">
