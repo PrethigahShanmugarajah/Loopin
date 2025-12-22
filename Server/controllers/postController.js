@@ -1,4 +1,3 @@
-// Server / controllers / postController.js
 import fs from "fs";
 import imagekit from "../configs/imageKit.js";
 import Post from "../models/Post.js";

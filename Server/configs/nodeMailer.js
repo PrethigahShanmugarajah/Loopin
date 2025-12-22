@@ -1,4 +1,3 @@
-// Server /configs / nodeMailer.js
 import nodeMailer from "nodemailer";
 
 // Create a transporter object using the SMTP settings

@@ -1,18 +1,61 @@
-import React, { useEffect, useState } from "react";
-import { dummyRecentMessagesData } from "../assets/assets";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { timeAgo } from "../utils/timeUtils";
+import { useAuth, useUser } from "@clerk/clerk-react";
+import api, { authHeader } from "../api/axios";
+import API_ROUTES from "../api/api_route";
+import toast from "react-hot-toast";
 
 const RecentMessages = () => {
   const [messages, setMessages] = useState([]);
+  const { user } = useUser();
+  const { getToken } = useAuth();
 
   const fetchRecentMessages = async () => {
-    setMessages(dummyRecentMessagesData);
+    try {
+      const token = await getToken();
+
+      const { data } = await api.get(
+        API_ROUTES.USER.GET_USER_RECENT_MESSAGES,
+        authHeader(token)
+      );
+
+      if (data.success) {
+        // Group messages by sender and get the latest message for each sender
+        const groupMessages = data.data.reduce((acc, message) => {
+          const senderId = message.from_user_id._id;
+          if (
+            !acc[senderId] ||
+            new Date(message.createdAt) > new Date(acc[senderId].createdAt)
+          ) {
+            acc[senderId] = message;
+          }
+          return acc;
+        }, {});
+
+        // Sort messages by date
+        const sortedMessages = Object.values(groupMessages).sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+
+        setMessages(sortedMessages);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error?.message);
+    }
   };
 
   useEffect(() => {
-    fetchRecentMessages();
-  }, []);
+    if (user) {
+      fetchRecentMessages();
+      setInterval(fetchRecentMessages, 3000);
+      return () => {
+        clearInterval();
+      };
+    }
+  }, [user]);
 
   return (
     <div className="bg-white max-w-xs mt-4 p-4 min-h-20 rounded-md shadow text-xs text-slate-800">

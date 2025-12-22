@@ -1,4 +1,3 @@
-// Client / src / pages / Connections.jsx
 import { useEffect, useState } from "react";
 import {
   MessageSquare,

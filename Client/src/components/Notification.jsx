@@ -1,4 +1,3 @@
-// Client / src / components / Notification.jsx
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 

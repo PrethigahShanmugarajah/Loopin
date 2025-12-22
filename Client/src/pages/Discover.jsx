@@ -1,4 +1,3 @@
-// Client / src / pages / Discover.jsx
 import { useEffect, useState } from "react";
 import { Search } from "lucide-react";
 import UserCard from "../components/UserCard";

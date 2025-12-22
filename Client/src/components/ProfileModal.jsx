@@ -1,4 +1,3 @@
-// Client / src / components / ProfileModal.jsx
 import { useState } from "react";
 import { Pencil } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";

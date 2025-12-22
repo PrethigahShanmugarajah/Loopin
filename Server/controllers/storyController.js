@@ -1,4 +1,3 @@
-// Server / controllers / storyController.js
 import fs from "fs";
 import imagekit from "../configs/imageKit.js";
 import Story from "../models/Story.js";

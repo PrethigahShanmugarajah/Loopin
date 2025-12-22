@@ -1,4 +1,3 @@
-// Client / src / components / StoryModal.jsx
 import { useState } from "react";
 import { ArrowLeft, Sparkle, TextIcon, Upload } from "lucide-react";
 import toast from "react-hot-toast";

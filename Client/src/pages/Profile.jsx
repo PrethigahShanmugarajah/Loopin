@@ -1,4 +1,3 @@
-// Client / src / pages / Profile.jsx
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Loading from "../components/Loading";

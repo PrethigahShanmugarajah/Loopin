@@ -1,4 +1,3 @@
-// Client / src / components / StoryViewer.jsx
 import { useEffect, useState } from "react";
 import { BadgeCheck, X } from "lucide-react";
 

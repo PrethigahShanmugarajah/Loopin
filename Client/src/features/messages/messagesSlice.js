@@ -1,10 +1,9 @@
-// Client / src / features / messages / messagesSlice.js
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api, { authHeader } from "../../api/axios";
 import API_ROUTES from "../../api/api_route";
 
 const initialState = {
-  messages: [],
+  messages: {},
 };
 
 export const fetchMessages = createAsyncThunk(
@@ -24,25 +23,35 @@ const messagesSlice = createSlice({
   initialState,
   reducers: {
     setMessages: (state, action) => {
-      state.messages = action.payload;
+      const { userId, messages } = action.payload;
+      state.messages[userId] = messages;
     },
 
     addMessage: (state, action) => {
-      if (!Array.isArray(state.messages)) state.messages = [];
-      state.messages = [...state.messages, action.payload];
+      const { message, userId } = action.payload;
+      if (!state.messages[userId]) state.messages[userId] = [];
+      if (!state.messages[userId].find((m) => m._id === message._id)) {
+        state.messages[userId] = [...state.messages[userId], message];
+      }
     },
 
     resetMessages: (state) => {
-      state.messages = [];
+      state.messages = {};
     },
   },
+
   extraReducers: (builder) => {
     builder.addCase(fetchMessages.fulfilled, (state, action) => {
-      if (action.payload && Array.isArray(action.payload.messages)) {
-        state.messages = action.payload.messages;
-      } else {
-        state.messages = [];
-      }
+      const userId = action.meta.arg.userId;
+      const existing = state.messages[userId] || [];
+
+      const newMessages = Array.isArray(action.payload?.data)
+        ? action.payload.data.filter(
+            (m) => !existing.find((e) => e._id === m._id)
+          )
+        : [];
+
+      state.messages[userId] = [...existing, ...newMessages];
     });
   },
 });

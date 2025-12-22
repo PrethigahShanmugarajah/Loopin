@@ -1,4 +1,3 @@
-// Client / src / features / user / userSlice.js
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api, { authHeader } from "../../api/axios";
 import API_ROUTES from "../../api/api_route";

@@ -1,4 +1,3 @@
-// Client / src / App.jsx
 import { Route, Routes, useLocation } from "react-router-dom";
 import Login from "./pages/Login";
 import Feed from "./pages/Feed";
@@ -52,9 +51,9 @@ const App = () => {
       eventSource.onmessage = (event) => {
         const message = JSON.parse(event.data);
 
-        if (pathnameRef.current === "/messages/" + message.from_user_id._id) {
-          dispatch(addMessage(message));
-        } else {
+        dispatch(addMessage({ message, userId: message.from_user_id._id }));
+
+        if (pathnameRef.current !== "/messages/" + message.from_user_id._id) {
           toast.custom((t) => <Notification t={t} message={message} />, {
             position: "bottom-right",
           });

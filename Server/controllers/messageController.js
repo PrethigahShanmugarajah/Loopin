@@ -1,4 +1,3 @@
-// Server / controllers / messageController.js
 import fs from "fs";
 import imagekit from "../configs/imageKit.js";
 import Message from "../models/Message.js";
@@ -130,17 +129,15 @@ export const getChatMessages = async (req, res) => {
 export const getUserRecentMessages = async (req, res) => {
   try {
     const { userId } = req.auth();
-    const messages = await Message.find(
-      { to_user_id: userId }.populate("from_user_id to_user_id")
-    ).sort({ created_at: -1 });
+    const messages = await Message.find({ to_user_id: userId })
+      .populate("from_user_id to_user_id")
+      .sort({ created_at: -1 });
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Recent messages fetched successfully!",
-        data: messages,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Recent messages fetched successfully!",
+      data: messages,
+    });
   } catch (error) {
     console.error("Get User Recent Messages Error:", error);
 

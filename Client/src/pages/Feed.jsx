@@ -1,4 +1,3 @@
-// Client / src / pages / Feed.jsx
 import { useEffect, useState } from "react";
 import { assets } from "../assets/assets";
 import Loading from "../components/Loading";

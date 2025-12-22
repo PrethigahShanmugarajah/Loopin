@@ -1,4 +1,3 @@
-// Server / middlewares / auth.js
 export const protect = async (req, res, next) => {
   try {
     const { userId } = await req.auth();

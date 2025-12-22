@@ -1,4 +1,3 @@
-// Client / src / app / store.js
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "../features/user/userSlice.js";
 import connectionsReducer from "../features/connections/connectionsSlice.js";

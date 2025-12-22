@@ -1,4 +1,3 @@
-// Server / routes / storyRoutes.js
 import express from "express";
 import { protect } from "../middlewares/auth.js";
 import { upload } from "../configs/multer.js";

@@ -1,4 +1,3 @@
-// Client / src / components / UserProfileinfo.jsx
 import { Calendar, MapPin, PenBox, Verified } from "lucide-react";
 import { dummyUserData } from "../assets/assets";
 import { timeAgo } from "../utils/timeUtils";

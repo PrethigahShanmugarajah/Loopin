@@ -1,4 +1,3 @@
-// Server / routes / messageRoutes.js
 import express from "express";
 import {
   getChatMessages,

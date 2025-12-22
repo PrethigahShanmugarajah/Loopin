@@ -1,4 +1,3 @@
-// Client / src / pages / ChatBox.jsx
 import { useEffect, useRef, useState } from "react";
 import { ImageIcon, SendHorizonal } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,16 +5,13 @@ import { useParams } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
 import api, { authHeader } from "../api/axios";
 import API_ROUTES from "../api/api_route";
-import {
-  addMessage,
-  fetchMessages,
-  resetMessages,
-} from "../features/messages/messagesSlice";
+import { addMessage, fetchMessages } from "../features/messages/messagesSlice";
 import toast from "react-hot-toast";
 
 const ChatBox = () => {
-  const { messages = [] } = useSelector((state) => state.messages);
   const { userId } = useParams();
+  const { messages = [] } = useSelector((state) => state.messages);
+  const currentMessages = messages[userId] || [];
   const { getToken } = useAuth();
   const dispatch = useDispatch();
 
@@ -55,7 +51,7 @@ const ChatBox = () => {
       if (data.success) {
         setText("");
         setImage(null);
-        dispatch(addMessage(data.data));
+        dispatch(addMessage({ message: data.data, userId }));
       } else {
         throw new Error(data.message);
       }
@@ -66,10 +62,6 @@ const ChatBox = () => {
 
   useEffect(() => {
     fetchUserMessages();
-
-    return () => {
-      dispatch(resetMessages());
-    };
   }, [userId]);
 
   useEffect(() => {
@@ -81,7 +73,7 @@ const ChatBox = () => {
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [currentMessages]);
 
   return (
     user && (
@@ -102,36 +94,36 @@ const ChatBox = () => {
 
         <div className="p-5 md:px-10 h-full overflow-y-scroll">
           <div className="space-y-4 max-w-4xl mx-auto">
-            {messages
+            {(currentMessages || [])
               .toSorted((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
-              .map((message, index) => (
-                <div
-                  key={index}
-                  className={`flex flex-col ${
-                    message.to_user_id !== user._id
-                      ? "items-start"
-                      : "items-end"
-                  }`}
-                >
+              .map((message, index) => {
+                const isSender = message.from_user_id === userId;
+                return (
                   <div
-                    className={`p-2 text-sm max-w-sm bg-white text-slate-700 rounded-lg shadow ${
-                      message.to_user_id !== user._id
-                        ? "rounded-bl-none"
-                        : "rounded-br-none"
+                    key={index}
+                    className={`flex flex-col ${
+                      isSender ? "items-start" : "items-end"
                     }`}
                   >
-                    {message.message_type === "image" && (
-                      <img
-                        src={message.media_url}
-                        className="w-full max-w-sm rounded-lg mb-1"
-                        alt=""
-                      />
-                    )}
-
-                    <p>{message.text}</p>
+                    <div
+                      className={`p-2 text-sm max-w-sm rounded-lg shadow ${
+                        isSender
+                          ? "bg-gray-100 text-gray-800 rounded-bl-none"
+                          : "bg-orange-500 text-white rounded-br-none"
+                      }`}
+                    >
+                      {message.message_type === "image" && (
+                        <img
+                          src={message.media_url}
+                          className="w-full max-w-sm rounded-lg mb-1"
+                          alt=""
+                        />
+                      )}
+                      <p>{message.text}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
 
             <div ref={messagesEndRef} />
           </div>

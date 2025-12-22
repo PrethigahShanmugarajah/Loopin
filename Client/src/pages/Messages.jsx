@@ -1,4 +1,3 @@
-// Client / src / pages / Messages.jsx
 import { Eye, MessageSquare } from "lucide-react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";

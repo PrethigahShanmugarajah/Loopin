@@ -1,4 +1,3 @@
-// Client / src / components / PostCard.jsx
 import { useState } from "react";
 import { BadgeCheck, Heart, MessageCircle, Share2 } from "lucide-react";
 import { timeAgo } from "../utils/timeUtils";
