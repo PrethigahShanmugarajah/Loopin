@@ -90,7 +90,6 @@ npm run dev
 ### 📂 Backend `.env` (Server/)
 
 ```
-# Server / .env
 FRONTEND_URL=
 MONGODB_URI=
 INNGEST_EVENT_KEY=
